@@ -1,6 +1,7 @@
 """
 디스코드 봇 캡챠 v1.0
 메인 스크립트
+commands, data, auth, database, log, main, verify
 제작자: 류관형
 """
 import discord
@@ -18,41 +19,41 @@ async def on_ready():
     log.call(__name__, on_ready.__name__, user=f"{client.user}")
 
 
-"""
-on_message 함수에서 fork 시 필요한 객체
-
-
-"""
 @client.event
 async def on_message(message):
-    # 발신자 동일 체크
-    if message.author == client.user:
-        if isinstance(message.channel, discord.channel.DMChannel):
-            log.call(__name__, on_message.__name__, author=message.author.name, channel=message.author.name,
-                     content=message.content)
-        else:
-            log.call(__name__, on_message.__name__, author=message.author.name, channel=message.channel.name,
-                     content=message.content)
+
+    # 디버그 채널인 경우 모두 무시
+    if message.channel.id == database.get_id_channel(8, 3):
         return
+
+    # 로그 정보 생성
+    user_id = message.author.name + "#" + message.author.discriminator
+    log_content = message.content
+    if isinstance(message.channel, discord.channel.DMChannel):
+        log_author = user_id
+        log_channel = 'DM'
+        log_etc = {"author_id": message.author.id}
+    else:
+        log_author = user_id
+        log_channel = message.channel.name
+        log_etc = {"channel_id": message.channel.id, "Nick": message.author.nick}
 
     # 로깅
     log.division_line()
-    log.call(__name__, on_message.__name__, author=message.author.name, content=message.content)
+    log.call(__name__, on_message.__name__, author=log_author, channel=log_channel, content=log_content, note=log_etc)
 
-    # DM 채널인 경우 commands.fork_dm
+    # 발신자가 봇인 경우 아래 내용 실행 안함
+    if message.author == client.user:
+        return
+
+    # DM인 경우 fork_dm, 아닌경우 fork 호출
+    channel = message.channel
     if isinstance(message.channel, discord.channel.DMChannel):
-        log.call(__name__, on_message.__name__, is_DM=True, channel=message.author.name)
-        channel = message.channel
-        await commands.fork_dm(channel, message)
-
-    # 일반 채널인 경우 commands.fork. -> fork
+        await commands.direct.fork(channel, message, client)
     else:
-        log.call(__name__, on_message.__name__, is_DM=False, channel=message.channel.name)
-        category = message.channel.category
-        channel = message.channel
-        await commands.fork(category, channel, message)
+        await commands.fork(channel.category, channel, message)
 
-    # 로그 전송
+    # 디버그 채널에 로그 전송
     debug_ch = client.get_channel(database.get_id_channel(8, 3))
     try:
         await debug_ch.send('\n'.join(log.cache))

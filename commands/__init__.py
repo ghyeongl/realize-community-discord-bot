@@ -16,6 +16,7 @@ import commands.infinity
 import commands.devops
 
 
+# 서버 내 채널의 카테고리별 fork
 async def fork(category, channel, message):
     log.call(__name__, fork.__name__, author=message.author.name, content=message.content)
     # CAPTCHA
@@ -49,22 +50,3 @@ async def fork(category, channel, message):
     # DEVOPS
     elif category.id == database.get_id_category(8):
         await devops.fork(channel, message)
-
-
-async def fork_dm(channel, message):
-    log.call(__name__, fork_dm.__name__)
-
-    if database.find_author_id(message.author.id) is None:
-        await direct.first_greet(channel, message)
-
-    elif message.contents.startswith("!도움"):
-        await direct.help_request(channel, message)
-        pass
-
-    elif message.contents.startswith("!대나무숲"):
-        await direct.bamboo(channel, message)
-        pass
-
-    elif message.contents.startswith("!확인"):
-        await direct.check(channel, message)
-        pass
