@@ -8,7 +8,8 @@ from ..captcha import entrance, not_a_robot, notice_and_culture
 
 
 async def fork(channel, message):
-    log.call(__name__, fork.__name__)
+    log.call(__name__, fork.__name__, author=database.get_disc_author(message.author), content=message.content)
+
     # CAPTCHA
     category_num = 1
 
@@ -19,8 +20,3 @@ async def fork(channel, message):
     # 로봇이-아닙니다
     elif channel.id == database.get_id_channel(category_num, 2):
         await not_a_robot.fork(channel, message)
-
-    # 공지-및-문화
-    elif channel.id == database.get_id_channel(category_num, 3):
-        await notice_and_culture.fork(channel, message)
-

@@ -6,12 +6,14 @@
 - 채널 내 도움말 임베드 실행
 """
 import discord
+
+import database
 import log
 
 
 # 하위 패키지로 fork
 async def fork(channel, message):
-    log.call(__name__, fork.__name__, type=message.type)
+    log.call(__name__, fork.__name__, author=database.get_disc_author(message.author), type=message.type)
 
     # 새 멤버 알림
     if message.type == discord.MessageType.new_member:
@@ -32,8 +34,8 @@ async def fork(channel, message):
 
 # 새 멤버 알림이 왔을 때 실행하는 함수
 async def nice_to_meet_you(channel, message):
-    await channel.send(f"안녕하세요, {message.author}님! 만나서 반가워요.\n"
-                       f"입회 절차를 완료하기 위해, 저(캡챠)에게 개인DM을 보내주세요!")
+    await channel.send(f"안녕하세요, {message.author.name}님! 만나서 반가워요.\n"
+                       f"입회 절차를 완료하기 위해, 저(캡챠)에게 개인 메시지를 보내주세요!")
 
 
 # 테스트

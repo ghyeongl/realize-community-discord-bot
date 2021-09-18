@@ -17,8 +17,10 @@ import commands.devops
 
 
 # 서버 내 채널의 카테고리별 fork
-async def fork(category, channel, message):
-    log.call(__name__, fork.__name__, author=message.author.name, content=message.content)
+async def fork(channel, message, author, client):
+    category = channel.category
+    log.call(__name__, fork.__name__, author=database.get_disc_author(author), content=message.content)
+
     # CAPTCHA
     if category.id == database.get_id_category(1):
         await captcha.fork(channel, message)

@@ -112,6 +112,9 @@ async def person_realize(channel, message, author_id):
         value = str(member_info[author_id]).replace("'", "")
         await channel.send(f"입력된 값이예요: {value[1:-1]}. 등록 요청을 전송할까요? (예/아니오)")
 
+    else:
+        await channel.send("제대로 입력해주세요!")
+
 
 # 전송여부 판단
 async def person_confirm(channel, message, author_id, client):
@@ -125,7 +128,7 @@ async def person_confirm(channel, message, author_id, client):
         await channel.send('초기화 되었어요. 아무거나 입력하면 다시 진행합니다.')
 
     else:
-        await channel.send('제대로 대답해주세요!')
+        await channel.send('제대로 입력해주세요!')
 
 
 # 승인 대기시
