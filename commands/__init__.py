@@ -29,26 +29,22 @@ async def fork(channel, message, author, client):
     elif category.id == database.get_id_category(2):
         await lily.fork(channel, message)
 
-    # 이루리랩 써클
-    elif category.id == database.get_id_category(3):
-        await lily_circle.fork(channel, message)
-
     # 나누리랩
-    elif category.id == database.get_id_category(4):
+    elif category.id == database.get_id_category(3):
         await nuri.fork(channel, message)
 
     # 맨드리랩
-    elif category.id == database.get_id_category(5):
+    elif category.id == database.get_id_category(4):
         await mandry.fork(channel, message)
+
+    # 무한확장 대화채널
+    elif category.id == database.get_id_category(5):
+        await infinity.fork(channel, message)
 
     # 리얼라이즈 오리지널
     elif category.id == database.get_id_category(6):
         await realize.fork(channel, message)
 
-    # 무한확장 대화채널
-    elif category.id == database.get_id_category(7):
-        await infinity.fork(channel, message)
-
     # DEVOPS
-    elif category.id == database.get_id_category(8):
+    elif category.id == database.get_id_category(7):
         await devops.fork(channel, message)

@@ -7,11 +7,14 @@ import database
 
 confirm_pending = []
 member_info = {}
+security_status = 1
+keys = ['Samplekey']
+names = {}
 
 
 # 새 등록 요청이 왔을 때 알림
 async def new_request(message, author_id, client):
-    channel = client.get_channel(database.get_id_channel(8, 4))
+    channel = client.get_channel(database.get_id_channel(7, 4))
     author_name = message.author.name + "#" + message.author.discriminator
     details = member_info[author_id]
     await channel.send(f"[New Request] Name: {author_name} | Details: {details} | ID: {author_id}")

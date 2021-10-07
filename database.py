@@ -7,8 +7,13 @@ json 이나 DB 에서 값을 불러와 리턴하는 함수의 집합
 import json
 import sqlite3
 
+import log
+
 
 # server_info.json 에서 데이터 끌어오기, 서버 내 채널의 id 조회에 사용
+import time
+
+
 def get_id_dict():
     with open("data/server_info.json", "r") as server_info:
         value = dict(json.load(server_info))
@@ -54,6 +59,20 @@ def get_id_channel(category_num, channel_num):
     return value
 
 
+# 서버 ID 조회
+def get_id_server():
+    global data
+    value = int(data["server"]["id"])
+    return value
+
+
+# 역할 ID 조회
+def get_id_roles(roles_name):
+    global data
+    value = data["roles"][roles_name]
+    return value
+
+
 # Author instance 반환
 def get_instance_author(author_id, client):
     pass
@@ -66,13 +85,11 @@ def get_instance_channel(category_num, channel_num, client):
 
 # Author 받아 Name + Discriminator 반환
 def get_disc_author(author):
-    value = author.name + "#" + author.discriminator
+    value = str(author.name + "#" + author.discriminator)
     return value
 
 
 # sqlite3 for author CRUD
-con = sqlite3.connect('data/author.db')
-cur = con.cursor()
 
 
 def db_initialize():
@@ -84,21 +101,49 @@ def get_name_author(author_id):
     pass
 
 
-# DB에 정보 추가
-def add_author(author_id, author_info):
+# 유저 회원가입 컨펌
+def add_member(author_id, name, disc, reg_info):
+    log.call(__name__, add_member.__name__, author_id=author_id, name=name, disc=disc, info=reg_info)
+    con = sqlite3.connect('data/members.db')
+    cur = con.cursor()
+    try:
+        cur.execute("""
+        INSERT INTO user_info (id, name, discriminator, real_name, number, auth_key, privacy_policy, signup_date)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (int(author_id), str(name), int(disc), str(reg_info['Name']), int(reg_info['Number']),
+                     str(reg_info['Key']), int(reg_info['Confirm']),
+                     str(time.strftime('%y%m%d-%H%M%S', time.localtime()))))
+        con.commit()
+    except sqlite3.OperationalError as e:
+        log.error("sqlite3.OperationalError", __name__, add_member.__name__, content=e)
+    con.close()
+
+
+# 유저 조회
+def get_member(author_id):
+
     pass
 
 
-# DB 정보 업데이트
-def update_author_info(author_id, type_of_update, contents):
-    pass
-
-
-# 유저가 DB에 등록되어 있는지 조회
-def find_author_id(author_id):
+# 유저 존재 여부 조회
+def in_member(author_id):
+    log.call(__name__, in_member.__name__, author_id=author_id)
+    con = sqlite3.connect('data/members.db')
+    cur = con.cursor()
+    cur.execute("SELECT id FROM user_info")
+    rows = cur.fetchall()
+    con.close()
+    for row in rows:
+        if author_id in row:
+            return True
     return False
 
 
 # 유저 삭제
-def del_author(author_id):
-    pass
+def del_member(author_id):
+    log.call(__name__, del_member.__name__, author_id=author_id)
+    con = sqlite3.connect('data/members.db')
+    cur = con.cursor()
+    cur.execute(f"DELETE FROM user_info WHERE id = {author_id}")
+    con.commit()
+    con.close()
