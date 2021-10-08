@@ -33,6 +33,10 @@ async def fork(channel, message, author, client):
         await check(channel, message, author)
         pass
 
+    # 등록된 사용자일 경우
+    elif database.in_member(author.id):
+        await default(channel, message, author)
+
 
 # 명령어 !도움 에 대한 함수
 async def help_request(channel, message, author):
@@ -53,3 +57,9 @@ async def bamboo(channel, message, author):
 async def check(channel, message, author):
     log.call(__name__, check.__name__, author_id=author.id, channel_id=channel.id)
     pass
+
+
+# 등록된 사용자의 경우
+async def default(channel, message, author):
+    log.call(__name__, default.__name__, author_id=author.id, channel_id=channel.id)
+    await channel.send("안녕하세요! '!도움' 을 입력해 명령어를 알아보세요.")

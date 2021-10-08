@@ -47,4 +47,4 @@ async def fork(channel, message, author, client):
 
     # DEVOPS
     elif category.id == database.get_id_category(7):
-        await devops.fork(channel, message)
+        await devops.fork(channel, message, client)

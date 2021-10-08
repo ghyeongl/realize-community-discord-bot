@@ -49,17 +49,21 @@ class Schedule(threading.Thread):
     def __init__(self, name):
         super().__init__()
         self.name = name
+        self.stat = True
 
     def run(self):
+        call(__name__, Schedule.run.__name__)
         asyncio.run(self.scheduler())
 
-    @staticmethod
-    async def scheduler():
-        call(__name__, Schedule.scheduler.__name__)
+    def stop(self):
+        call(__name__, Schedule.stop.__name__)
+        self.stat = False
+
+    async def scheduler(self):
         m = 60 - time.time() % 60
         await asyncio.sleep(m)
         call(__name__, Schedule.scheduler.__name__, precision=round(time.time() % 1, 5))
-        while True:
+        while self.stat:
             schedule.run_pending()
             await asyncio.sleep(60)
 
