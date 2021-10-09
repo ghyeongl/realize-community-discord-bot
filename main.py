@@ -56,7 +56,7 @@ async def on_message(message):
     # DM인 경우 fork_dm, 아닌경우 fork 호출
     if isinstance(channel, discord.channel.DMChannel):
         await commands.direct.fork(channel, author, message, client)
-    elif message.content.startswith("!"):
+    else:
         await commands.fork(channel, author, message, client)
 
     # 디버그 채널에 로그 전송
