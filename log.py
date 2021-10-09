@@ -2,9 +2,10 @@
 ./log.py
 로그 기록 및 전송 시스템
 """
-
+import csv
 import os
 import time
+import datetime
 import asyncio
 import threading
 import schedule
@@ -14,6 +15,14 @@ import schedule
 cache = []
 remain = []
 cur_path = ''
+
+
+# (기능) 어제 로그를 추가
+def _prev_path(folder):
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    prev = f"{folder}/{yesterday.strftime('%y%m%d')}.txt"
+    if os.path.exists(prev):
+        remain.append(prev)
 
 
 # (기능) 파일 이름 정하기
@@ -28,6 +37,7 @@ def log_path():
         fp.write(content + "\n")
         print(content)
         fp.close()
+        _prev_path(folder)
     return path
 
 
@@ -83,6 +93,14 @@ def call(module_name, func_name, **info):
     append_log(cur_path, content)
 
 
+# 결과 로깅
+def result(module_name, func_name, **info):
+    content = f"[result][{module_name}][{func_name}] {str(info)[1:-1]} | {time.strftime('%x %X', time.localtime())}"
+    content = content.replace("'", "")
+    print(content)
+    append_log(cur_path, content)
+
+
 # 구분선
 def division_line():
     content = '-' * 30
@@ -99,6 +117,18 @@ def error(content, module_name, func_name, **info):
     append_log(cur_path, content)
     print("\033[31m" + content + "\033[0m")
     cache.append(content)
+
+
+# 채팅 기록
+def chats(channel_id, author_id, contents):
+    ti = time.strftime("%y%m%d", time.localtime())
+    dire = "./data/chats"
+    path = f"{dire}/{ti}.csv"
+    f = open(path, "a", encoding='utf-8', newline='')
+    wr = csv.writer(f)
+    cur_time = time.strftime("%H%M%S", time.localtime())
+    wr.writerow([channel_id, author_id, cur_time, contents.replace('\n', "/n")])
+    f.close()
 
 
 # 처음 실행시

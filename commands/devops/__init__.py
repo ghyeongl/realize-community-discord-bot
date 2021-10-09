@@ -10,21 +10,18 @@ from ..devops import moderator, test, management
 
 
 # Devops 카테고리 대상 fork
-async def fork(channel, message, client):
-    log.call(__name__, fork.__name__)
+async def fork(channel, author, message, client):
+    log.call(__name__, fork.__name__, channel_id=channel.id, author_id=author.id)
     # DEVOPS
     category_num = 7
 
-    # moderator-only
-    if channel.id == database.get_id_channel(category_num, 1):
-        pass
+    # moderator-only -> skip
+    # debug -> skip
 
     # test
     if channel.id == database.get_id_channel(category_num, 2):
-        await test.fork(channel, message)
+        await test.fork(channel, author, message)
 
     # management
-    if channel.id == database.get_id_channel(category_num, 4):
-        await management.fork(channel, message, client)
-
-
+    elif channel.id == database.get_id_channel(category_num, 4):
+        await management.fork(channel, author, message, client)

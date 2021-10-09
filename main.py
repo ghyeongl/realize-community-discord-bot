@@ -6,8 +6,6 @@ commands, data, auth, database, log, main, verify
 """
 import discord
 import commands
-import verify
-import auth
 import database
 import log
 
@@ -48,15 +46,18 @@ async def on_message(message):
     log.call(__name__, on_message.__name__, author=log_author, channel=log_channel, content=log_content,
              author_id=author.id, channel_id=channel.id, note=log_etc)
 
+    # 채팅 기록
+    log.chats(channel.id, author.id, message.content)
+
     # 발신자가 봇인 경우 아래 내용 실행 안함
     if author == client.user:
         return
 
     # DM인 경우 fork_dm, 아닌경우 fork 호출
     if isinstance(channel, discord.channel.DMChannel):
-        await commands.direct.fork(channel, message, author, client)
+        await commands.direct.fork(channel, author, message, client)
     elif message.content.startswith("!"):
-        await commands.fork(channel, message, author, client)
+        await commands.fork(channel, author, message, client)
 
     # 디버그 채널에 로그 전송
     debug_ch = client.get_channel(database.get_id_channel(7, 3))
@@ -67,4 +68,4 @@ async def on_message(message):
         log.cache.clear()
 
 
-client.run('ODgyMTc1NTk5MTM1ODE3NzQ4.YS3kDA.t6Q7jLRBY8r5-t97NsCoCzeEq4w')
+client.run(database.get_token_bot())
