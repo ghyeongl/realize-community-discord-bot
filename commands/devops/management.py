@@ -117,6 +117,7 @@ async def accept(author_id, client):
             await member.edit(nick=reg_info["Name"])
             await member.dm_channel.send('등록이 완료되었어요. 커뮤니티를 확인해보세요!')
             del member_info[member.id]
+            confirm_pending.remove(member.id)
             log.result(__name__, accept.__name__, author_id=author_id, status=True)
             return True
         elif author is not None:
