@@ -25,30 +25,31 @@ async def fork(channel, author, message, client):
     if category.id == database.get_id_category(1):
         await captcha.fork(channel, author, message)
 
-    # 이루리랩
-    elif category.id == database.get_id_category(2):
-        await lily.fork(channel, author, message)
+    elif message.startswith("!"):
+        # 이루리랩
+        if category.id == database.get_id_category(2):
+            await lily.fork(channel, author, message)
 
-    # 나누리랩
-    elif category.id == database.get_id_category(3):
-        await nuri.fork(channel, author, message)
+        # 나누리랩
+        elif category.id == database.get_id_category(3):
+            await nuri.fork(channel, author, message)
 
-    # 맨드리랩
-    elif category.id == database.get_id_category(4):
-        await mandry.fork(channel, author, message)
+        # 맨드리랩
+        elif category.id == database.get_id_category(4):
+            await mandry.fork(channel, author, message)
 
-    # 무한확장 대화채널
-    elif category.id == database.get_id_category(5):
-        await infinity.fork(channel, author, message)
+        # 무한확장 대화채널
+        elif category.id == database.get_id_category(5):
+            await infinity.fork(channel, author, message)
 
-    # 리얼라이즈 오리지널
-    elif category.id == database.get_id_category(6):
-        await realize.fork(channel, author, message)
+        # 리얼라이즈 오리지널
+        elif category.id == database.get_id_category(6):
+            await realize.fork(channel, author, message)
 
-    # DEVOPS
-    elif category.id == database.get_id_category(7):
-        await devops.fork(channel, author, message, client)
+        # DEVOPS
+        elif category.id == database.get_id_category(7):
+            await devops.fork(channel, author, message, client)
 
-    # General
-    else:
-        await general.fork(channel, author, message)
+        # General
+        else:
+            await general.fork(channel, author, message)

@@ -20,7 +20,14 @@ def get_id_dict():
     return value
 
 
+def get_tk_dict():
+    with open("data/token.json", "r") as token:
+        value = dict(json.load(token))
+    return value
+
+
 data = get_id_dict()
+token = get_tk_dict()
 
 
 # 채널 이름 조회
@@ -55,7 +62,7 @@ def get_id_server():
 
 # 봇 토큰 조회
 def get_token_bot():
-    value = str(data["token"])
+    value = str(token["token"])
     return value
 
 
