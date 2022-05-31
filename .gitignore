@@ -213,3 +213,5 @@ cython_debug/
 
 # Manual add
 data/token.json
+data/log/
+data/chats/
