@@ -25,7 +25,7 @@ async def fork(channel, author, message, client):
     if category.id == database.get_id_category(1):
         await captcha.fork(channel, author, message)
 
-    elif message.startswith("!"):
+    elif message.content.startswith("!"):
         # 이루리랩
         if category.id == database.get_id_category(2):
             await lily.fork(channel, author, message)
